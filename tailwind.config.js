@@ -3,7 +3,11 @@ module.exports = {
   darkMode: 'media', // or 'media' or 'class'
   mode: 'jit',
   theme: {
-    extend: {}
+    extend: {
+      backgroundImage: {
+        hero: "url('/img/airplane-bg.jpg')"
+      }
+    }
   },
   variants: {
     extend: {}
