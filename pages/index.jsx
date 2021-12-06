@@ -50,7 +50,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="bg-hero blur-sm w-screen h-screen absolute z-0 brightness-75"></div>
+      <div className="bg-hero blur-sm w-screen h-screen absolute z-0 brightness-75" />
       <div className="flex h-screen w-screen justify-center relative content-center p-20 z-50">
         <div className="grid grid-flow-col grid-cols-12 grid-rows-3 gap-6 h-full">
           <div className="col-start-1 row-start-1 col-span-3 transform scale-110">
