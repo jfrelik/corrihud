@@ -53,22 +53,26 @@ export default function Home() {
       <div className="bg-hero blur-sm w-screen h-screen absolute z-0 brightness-75" />
       <div className="flex h-screen w-screen justify-center relative content-center p-20 z-50">
         <div className="grid grid-flow-col grid-cols-12 grid-rows-3 gap-6 h-full">
-          <div className="col-start-1 row-start-1 col-span-3 transform scale-110">
+          <div className="col-start-1 row-start-1 col-span-3">
             <HomeDataBox
               title="Zakażonych"
               data={todayCases}
-              css="text-red-500"
+              css="text-red-500 w-max"
             />
           </div>
 
-          <div className="col-start-1 row-start-2 col-span-3 transform scale-90">
-            <HomeDataBox title="Zmarłych" data={todayDeaths} css="text-black" />
+          <div className="col-start-1 row-start-2 col-span-3">
+            <HomeDataBox
+              title="Zmarłych"
+              data={todayDeaths}
+              css="text-black w-max"
+            />
           </div>
           <div className="col-start-1 row-start-3 col-span-3">
             <HomeDataBox
               title="Wyzdrowiałych"
               data={todayRecovered}
-              css="text-green-500"
+              css="text-green-500 w-max"
             />
           </div>
           <div className="row-start-1 col-start-9 col-span-4 transform scale-110">
