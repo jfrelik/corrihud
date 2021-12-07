@@ -2,7 +2,9 @@ import * as React from 'react';
 import useSWR from 'swr';
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-import HomeDataBox from '../components/HomeDataBox/HomeDataBox';
+import StatusBarTop from '../components/StatusBarTop/StatusBarTop';
+import Hero from '../components/Hero/Hero';
+import StatusBarBottom from '../components/StatusBarBottom/StatusBarBottom';
 
 export default function Home() {
   const { data: covidData, error: covidError } = useSWR('/api/covid', fetcher);
@@ -10,33 +12,15 @@ export default function Home() {
     '/api/weather',
     fetcher
   );
-  const [dt, setDt] = React.useState({
-    hour: 0,
-    minute: 0,
-    day: 0,
-    month: 0,
-    year: 0,
-    dayUntilExam: 0
-  });
-  React.useEffect(() => {
-    let secTimer = setInterval(() => {
-      const examDate = new Date(2022, 4, 5);
-      let dayMilliseconds = 1000 * 60 * 60 * 24;
-      const month = ('0' + new Date().getMonth()).slice(-2);
-      setDt({
-        hour: ('0' + new Date().getHours()).slice(-2),
-        minute: ('0' + new Date().getMinutes()).slice(-2),
-        day: ('0' + new Date().getDate()).slice(-2),
-        month: parseInt(month) + 1,
-        year: new Date().getFullYear(),
-        dayUntilExam: Math.ceil(
-          (examDate.getTime() - new Date().getTime()) / dayMilliseconds
-        )
-      });
-    }, 15000);
 
-    return () => clearInterval(secTimer);
-  }, []);
+  const [retracted, setRetracted] = React.useState(true);
+  React.useEffect(() => {
+    let retractInterval = setInterval(() => {
+      setRetracted(!retracted);
+    }, 5000);
+
+    return () => clearInterval(retractInterval);
+  }, [retracted]);
 
   if (!covidData) return <h1>Loading...</h1>;
   if (!weatherData) return <h1>Loading...</h1>;
@@ -48,51 +32,27 @@ export default function Home() {
     }
   } = weatherData;
 
-  return (
-    <>
-      <div className="bg-hero blur-sm w-screen h-screen absolute z-0 brightness-75" />
-      <div className="flex h-screen w-screen justify-center relative content-center p-20 z-50">
-        <div className="grid grid-flow-col grid-cols-12 grid-rows-3 gap-6 h-full">
-          <div className="col-start-1 row-start-1 col-span-3">
-            <HomeDataBox
-              title="Zakażonych"
-              data={todayCases}
-              css="text-red-500 w-max"
-            />
-          </div>
+  // Temp for tests
+  const text =
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer purus lorem, efficitur elementum venenatis id, pulvinar a orci. Suspendisse at lacus arcu. Sed vehicula tellus non nibh ornare, ac ullamcorper massa pharetra. Nullam in vehicula ligula. Aenean at magna lacus. Proin lorem nisi, dictum vel velit ut, interdum rutrum odio. Nulla id tempus sapien. Aenean accumsan ante ut cursus consequat. Sed eu lectus sit amet massa venenatis vehicula eget sed sapien. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi mollis turpis tellus, at rutrum mi tempor eget. Donec semper vulputate magna, in accumsan erat iaculis vel. Fusce vulputate consequat purus, vitae aliquet eros tincidunt eget. Suspendisse fringilla dignissim sapien, vitae eleifend massa lobortis vitae. Nulla facilisi. ';
 
-          <div className="col-start-1 row-start-2 col-span-3">
-            <HomeDataBox
-              title="Zmarłych"
-              data={todayDeaths}
-              css="text-black w-max"
-            />
-          </div>
-          <div className="col-start-1 row-start-3 col-span-3">
-            <HomeDataBox
-              title="Wyzdrowiałych"
-              data={todayRecovered}
-              css="text-green-500 w-max"
-            />
-          </div>
-          <div className="row-start-1 col-start-9 col-span-4 transform scale-110">
-            <HomeDataBox
-              title={`${dt.day}.${dt.month}.${dt.year}r`}
-              data={`${dt.hour}:${dt.minute}`}
-            />
-          </div>
-          <div className="row-start-2 col-start-9 col-span-4 transform translate-x-12">
-            <HomeDataBox title={weatherDesc} data={`${temp_c}°C`} />
-          </div>
-          <div className="row-start-3 col-start-7 col-span-5 transform scale-110">
-            <HomeDataBox
-              title="Matura 2022"
-              data={`${dt.dayUntilExam} dni`}
-              css="text-blue-600"
-            />
-          </div>
-        </div>
+  return (
+    <div className="overflow-hidden">
+      <div className="bg-hero w-screen h-screen absolute z-0 brightness-75" />
+      <div className="flex flex-col h-screen w-screen relative z-50 items-center">
+        <StatusBarTop
+          retracted={retracted}
+          weatherDesc={weatherDesc}
+          temp_c={temp_c}
+        />
+        <Hero retracted={retracted} title={'Ogłoszenie'} content={text} />
+        <StatusBarBottom
+          retracted={retracted}
+          todayCases={todayCases}
+          todayDeaths={todayDeaths}
+          todayRecovered={todayRecovered}
+        />
       </div>
-    </>
+    </div>
   );
 }
